@@ -1,0 +1,36 @@
+### Home
+GET http://127.0.0.1:5000/
+
+###
+
+### Get all books
+GET http://127.0.0.1:5000/books
+
+###
+
+### Add a book
+POST http://127.0.0.1:5000/books
+Content-Type: application/json
+
+{
+    "title": "Python Basics",
+    "author": "John Smith",
+    "quantity": 10
+}
+
+###
+
+### Update book
+PUT http://127.0.0.1:5000/books/1
+Content-Type: application/json
+
+{
+    "title": "Advanced Python",
+    "author": "John Smith",
+    "quantity": 8
+}
+
+###
+
+### Delete book
+DELETE http://127.0.0.1:5000/books/1

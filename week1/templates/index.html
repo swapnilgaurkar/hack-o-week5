@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<title>Library Dashboard</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="left">
+
+<h1>📚 Library</h1>
+
+<div class="form">
+
+<input id="title" placeholder="Book Title">
+
+<input id="author" placeholder="Author">
+
+<input id="quantity" type="number" placeholder="Quantity">
+
+<button onclick="addBook()">Add Book</button>
+
+</div>
+
+</div>
+
+<div class="right">
+
+<h2>Available Books</h2>
+
+<div id="books"></div>
+
+</div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+
+</html>
