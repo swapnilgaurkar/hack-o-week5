@@ -1,0 +1,11 @@
+StudentID,Name,Class,Math,Science,English,Computer
+101,Alice,A,89,91,85,95
+102,Bob,A,76,80,72,81
+103,Charlie,B,95,94,98,96
+104,David,B,,78,80,83
+105,Eva,A,65,70,68,72
+106,Frank,B,88,90,,91
+107,Grace,A,92,89,90,94
+108,Henry,B,55,60,58,62
+109,Ivy,A,84,86,82,88
+110,Jack,B,73,75,70,77
