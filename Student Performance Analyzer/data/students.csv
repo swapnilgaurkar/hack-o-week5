@@ -1,0 +1,16 @@
+Student_ID,Name,Branch,Gender,Maths,Science,Python,Attendance
+101,Honey,CSE,Male,85,90,88,92
+102,Rahul,AI,Male,72,68,75,87
+103,Sneha,CSE,Female,95,91,98,97
+104,Priya,IT,Female,80,85,84,89
+105,Amit,CSE,Male,65,70,60,81
+106,Neha,AI,Female,88,90,92,95
+107,Rohan,IT,Male,55,60,58,76
+108,Karan,CSE,Male,78,82,80,88
+109,Anjali,AI,Female,91,94,96,98
+110,Meera,IT,Female,83,79,85,90
+111,Arjun,CSE,Male,69,74,71,84
+112,Divya,AI,Female,87,89,90,93
+113,Vikas,IT,Male,62,65,67,80
+114,Pooja,CSE,Female,93,95,94,99
+115,Sameer,AI,Male,76,78,74,86
