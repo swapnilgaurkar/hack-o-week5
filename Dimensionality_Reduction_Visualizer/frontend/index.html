@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DimViz — PCA & t-SNE Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Plotly.js is loaded from its official CDN for interactive browser charts. -->
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+    <div class="bg-orb orb-one"></div>
+    <div class="bg-orb orb-two"></div>
+
+    <main class="container">
+        <header class="hero">
+            <div class="badge">HACK-O-WEEK • WEEK 11–12</div>
+            <h1><span>Dim</span>Viz</h1>
+            <h2>PCA &amp; t-SNE Dimensionality Reduction Visualizer</h2>
+            <p>
+                Explore how high-dimensional datasets can be transformed into two dimensions
+                for easier analysis and visualization.
+            </p>
+        </header>
+
+        <section class="card upload-card">
+            <div>
+                <p class="section-kicker">01 • DATASET</p>
+                <h3>Upload your CSV</h3>
+                <p class="muted">
+                    DimViz automatically detects numerical features, handles missing values,
+                    and standardizes the data before dimensionality reduction.
+                </p>
+            </div>
+            <div class="upload-row">
+                <label class="file-picker">
+                    <input id="csvFile" type="file" accept=".csv,text/csv">
+                    <span id="fileLabel">Choose CSV file</span>
+                </label>
+                <button id="uploadBtn" class="primary-btn">Analyze Dataset</button>
+            </div>
+            <div id="message" class="message hidden"></div>
+        </section>
+
+        <section id="datasetSection" class="hidden">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">02 • DATASET INSIGHTS</p>
+                    <h3>Dataset overview</h3>
+                </div>
+                <div class="file-name" id="filename">sample_dataset.csv</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat"><span>Rows</span><strong id="rows">—</strong></div>
+                <div class="stat"><span>Columns</span><strong id="columns">—</strong></div>
+                <div class="stat"><span>Numerical Features</span><strong id="numericFeatures">—</strong></div>
+                <div class="stat"><span>Missing Values</span><strong id="missingValues">—</strong></div>
+            </div>
+
+            <div class="dataset-tools card">
+                <div>
+                    <p class="section-kicker">COLORING</p>
+                    <h3>Optional class column</h3>
+                    <p class="muted">Choose a categorical column to color points by class.</p>
+                </div>
+                <select id="classColumn">
+                    <option value="">No class coloring</option>
+                </select>
+            </div>
+
+            <div class="preview card">
+                <div class="section-heading compact">
+                    <div>
+                        <p class="section-kicker">PREVIEW</p>
+                        <h3>First rows</h3>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table id="previewTable"></table>
+                </div>
+            </div>
+        </section>
+
+        <section id="pcaSection" class="analysis-grid hidden">
+            <div class="card analysis-info">
+                <p class="section-kicker">03 • LINEAR REDUCTION</p>
+                <h3>Principal Component Analysis</h3>
+                <p class="muted">
+                    PCA finds new directions that capture the maximum variance in the
+                    standardized dataset.
+                </p>
+
+                <div class="concept-box">
+                    <strong>PC1</strong>
+                    <span>Direction containing the highest variance.</span>
+                </div>
+                <div class="concept-box">
+                    <strong>PC2</strong>
+                    <span>Second most important direction of variance.</span>
+                </div>
+
+                <button id="pcaBtn" class="primary-btn full">Run PCA</button>
+
+                <div id="pcaVariance" class="variance hidden">
+                    <div><span>PC1</span><strong id="pc1Value">—</strong></div>
+                    <div><span>PC2</span><strong id="pc2Value">—</strong></div>
+                    <div class="total"><span>Total retained</span><strong id="totalValue">—</strong></div>
+                </div>
+            </div>
+
+            <div class="card chart-card">
+                <div class="chart-title">
+                    <div>
+                        <p class="section-kicker">INTERACTIVE VISUALIZATION</p>
+                        <h3>PCA 2D Projection</h3>
+                    </div>
+                </div>
+                <div id="pcaChart" class="chart-placeholder">
+                    Run PCA to display the visualization.
+                </div>
+                <div id="varianceChart" class="small-chart"></div>
+            </div>
+        </section>
+
+        <section id="tsneSection" class="analysis-grid hidden">
+            <div class="card analysis-info">
+                <p class="section-kicker">04 • NON-LINEAR REDUCTION</p>
+                <h3>t-SNE</h3>
+                <p class="muted">
+                    t-SNE is a non-linear technique that tries to keep similar data points
+                    close together, making it useful for visualizing clusters.
+                </p>
+
+                <div class="concept-box">
+                    <strong>Local similarity</strong>
+                    <span>Nearby points in the original space tend to stay nearby in the map.</span>
+                </div>
+
+                <label class="field">
+                    <span>Perplexity</span>
+                    <input id="perplexity" type="number" min="2" step="1" value="30">
+                    <small>DimViz automatically adjusts this if it is too large for your dataset.</small>
+                </label>
+
+                <button id="tsneBtn" class="primary-btn full">Run t-SNE</button>
+
+                <div class="result-note">
+                    <span>Actual perplexity used</span>
+                    <strong id="actualPerplexity">—</strong>
+                </div>
+            </div>
+
+            <div class="card chart-card">
+                <div class="chart-title">
+                    <div>
+                        <p class="section-kicker">INTERACTIVE VISUALIZATION</p>
+                        <h3>t-SNE 2D Projection</h3>
+                    </div>
+                </div>
+                <div id="tsneChart" class="chart-placeholder">
+                    Run t-SNE to display the visualization.
+                </div>
+            </div>
+        </section>
+
+        <section id="comparisonSection" class="card comparison hidden">
+            <p class="section-kicker">05 • COMPARE</p>
+            <h3>PCA vs t-SNE</h3>
+            <p class="muted">Both reduce dimensions, but they answer different questions.</p>
+
+            <div class="comparison-table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Aspect</th><th>PCA</th><th>t-SNE</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Type</td><td>Linear</td><td>Non-linear</td></tr>
+                        <tr><td>Main idea</td><td>Maximizes variance</td><td>Preserves local similarities</td></tr>
+                        <tr><td>Speed</td><td>Usually faster</td><td>Usually slower</td></tr>
+                        <tr><td>Interpretability</td><td>Components have mathematical meaning</td><td>Axes are mainly visual</td></tr>
+                        <tr><td>Best use</td><td>Reduction + visualization</td><td>Cluster visualization</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="takeaway">
+                <strong>Quick takeaway:</strong>
+                PCA is useful when you want an interpretable, variance-based transformation.
+                t-SNE is especially useful when you want to visually inspect local clusters.
+            </div>
+        </section>
+
+        <footer>
+            <span>DimViz • 5th Semester Hack-o-week</span>
+            <span>Built with Flask • Scikit-learn • Plotly.js</span>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

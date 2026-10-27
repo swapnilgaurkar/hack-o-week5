@@ -1,0 +1,149 @@
+python3 -m venv .venv<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moneta · Expense Pattern Analyzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg-glow"></div>
+<aside class="sidebar">
+  <div class="brand"><span class="logo">M</span><div><b>Moneta</b><small>Expense Pattern Analyzer</small></div></div>
+  <nav id="nav">
+    <a href="#overview" data-page="overview"><i>◉</i><span>Overview</span></a>
+    <a href="#expenses" data-page="expenses"><i>☰</i><span>Expenses</span></a>
+    <a href="#insights" data-page="insights"><i>◔</i><span>Insights</span></a>
+    <a href="#predictor" data-page="predictor"><i>✦</i><span>Predictor</span></a>
+    <a href="#lab" data-page="lab"><i>⌬</i><span>Model Lab</span></a>
+  </nav>
+</aside>
+<main>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<section id="page-overview" class="page">
+  <header class="page-head"><h1>Overview</h1>
+    <form id="budget-form" class="inline-form"><label>Monthly budget
+      <input id="budget-input" type="number" step="0.01" min="0.01" placeholder="e.g. 20000" required></label>
+      <button class="btn">Set budget</button></form></header>
+  <div class="grid stats">
+    <div class="card"><span class="label">Spent this month</span><div class="big" id="s-total">0.00</div></div>
+    <div class="card"><span class="label">Monthly budget</span><div class="big" id="s-budget">Not set</div></div>
+    <div class="card"><span class="label">Remaining</span><div class="big" id="s-remaining">—</div></div>
+    <div class="card"><span class="label">Transactions</span><div class="big" id="s-count">0</div></div>
+  </div>
+  <div class="card"><div class="row"><span class="label">Budget utilization</span><b id="s-util">—</b></div>
+    <div class="progress"><div id="s-bar"></div></div></div>
+  <div class="grid two">
+    <div class="card"><h3>Spending activity</h3><div class="chart-box"><canvas id="ch-daily"></canvas></div><p class="fallback" id="fb-daily"></p></div>
+    <div class="card"><h3>By category</h3><div class="chart-box"><canvas id="ch-cat"></canvas></div><p class="fallback" id="fb-cat"></p></div>
+  </div>
+  <div class="card"><h3>Recent transactions</h3><div id="recent"></div></div>
+</section>
+
+<section id="page-expenses" class="page">
+  <header class="page-head"><h1>Expenses</h1></header>
+  <div class="card"><h3 id="form-title">Add expense</h3>
+    <form id="expense-form" class="form-grid" novalidate>
+      <input type="hidden" id="e-id">
+      <label>Date<input id="e-date" type="date" required></label>
+      <label>Amount<input id="e-amount" type="number" step="0.01" min="0.01" required></label>
+      <label>Category<select id="e-category" required></select></label>
+      <label>Description (optional)<input id="e-desc" maxlength="200"></label>
+      <div class="form-actions"><button class="btn" id="e-save">Add expense</button>
+        <button type="button" class="btn ghost" id="e-cancel" hidden>Cancel edit</button></div>
+    </form></div>
+  <div class="card"><div class="filters">
+      <input id="f-q" placeholder="Search description or category…">
+      <select id="f-cat"><option value="">All categories</option></select>
+      <select id="f-sort"><option value="date:desc">Newest first</option><option value="date:asc">Oldest first</option>
+        <option value="amount:desc">Highest amount</option><option value="amount:asc">Lowest amount</option></select></div>
+    <div class="table-wrap"><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th class="r">Amount</th><th></th></tr></thead>
+      <tbody id="exp-body"></tbody></table></div>
+    <div id="exp-empty" class="empty" hidden>No expenses yet. Add your first one above.</div></div>
+</section>
+
+<section id="page-insights" class="page">
+  <header class="page-head"><h1>Spending insights</h1></header>
+  <div id="ins-empty" class="card empty" hidden>No spending recorded this month. <a href="#expenses">Add an expense</a> to see insights.</div>
+  <div id="ins-body">
+    <div class="grid stats">
+      <div class="card"><span class="label">Top category</span><div class="big small" id="i-top">—</div></div>
+      <div class="card"><span class="label">Actual spending</span><div class="big small" id="i-actual">—</div></div>
+      <div class="card"><span class="label">Budget</span><div class="big small" id="i-budget">—</div></div>
+      <div class="card"><span class="label">Budget used</span><div class="big small" id="i-util">—</div></div>
+    </div>
+    <div class="grid two">
+      <div class="card"><h3>Category share</h3><div class="chart-box"><canvas id="ch-donut"></canvas></div></div>
+      <div class="card"><h3>Weekly trend</h3><div class="chart-box"><canvas id="ch-weekly"></canvas></div><p class="fallback" id="fb-weekly"></p></div>
+    </div>
+    <div class="card"><h3>Category totals</h3><div id="cat-list"></div></div>
+  </div>
+</section>
+
+<section id="page-predictor" class="page">
+  <header class="page-head"><h1>AI budget predictor</h1></header>
+  <div class="grid two">
+    <div class="card"><h3>Your month so far</h3>
+      <form id="pred-form" class="stack" novalidate>
+        <label>Monthly budget<input id="p-monthly_budget" type="number" step="0.01" min="0.01" required></label>
+        <label>Amount spent so far<input id="p-spent_so_far" type="number" step="0.01" min="0" required></label>
+        <label>Days remaining in month<input id="p-days_remaining" type="number" step="1" min="0" max="31" required></label>
+        <label>Recent average daily spending<input id="p-avg_daily_spending" type="number" step="0.01" min="0" required></label>
+        <label>Previous month's total spending<input id="p-previous_period_spending" type="number" step="0.01" min="0" required></label>
+        <div class="form-actions"><button class="btn">Estimate risk</button>
+          <button type="button" class="btn ghost" id="p-fill">Use my tracked data</button></div>
+      </form></div>
+    <div class="card"><h3>Estimate</h3>
+      <div id="pred-empty" class="empty">Enter your numbers and press “Estimate risk”.</div>
+      <div id="pred-out" hidden>
+        <div class="big" id="pr-pct">0%</div><span class="badge" id="pr-badge">low</span>
+        <p id="pr-explain" class="muted"></p></div>
+      <p class="disclaimer">⚠ This model is trained on <b>synthetic</b> data for educational demonstration only. It is not a guarantee and not financial advice.</p>
+    </div>
+  </div>
+</section>
+
+<section id="page-lab" class="page">
+  <header class="page-head"><h1>Neural Network Model Lab</h1></header>
+  <div class="grid two">
+    <div class="card"><h3>Train &amp; manage</h3>
+      <p class="muted">The model learns from <b>synthetic</b> examples, not from your real transactions.</p>
+      <form id="train-form" class="form-grid" novalidate>
+        <label>Optimizer<select id="t-opt"><option value="adam">Adam</option><option value="sgd">SGD</option></select></label>
+        <label>Hidden activation<select id="t-act"><option value="relu">ReLU</option><option value="tanh">Tanh</option></select></label>
+        <label>Learning rate<input id="t-lr" type="number" step="any" min="0.00001" max="1" value="0.01"></label>
+        <label>Epochs<input id="t-ep" type="number" step="1" min="1" max="1000" value="100"></label>
+        <div class="form-actions"><button class="btn" id="t-train">Train model</button></div>
+      </form>
+      <div class="btn-row"><button class="btn ghost" id="t-save">Save model</button>
+        <button class="btn ghost" id="t-load">Load saved model</button>
+        <a class="btn ghost" href="#predictor">Generate prediction</a></div>
+      <ul class="status"><li>Training: <b id="st-train">Not trained — train or load a model</b></li>
+        <li>Persistence: <b id="st-save">—</b></li></ul>
+    </div>
+    <div class="card"><h3>Training loss</h3><div class="chart-box"><canvas id="ch-loss"></canvas></div><p class="fallback" id="fb-loss"></p>
+      <div id="lab-metrics" hidden>
+        <div class="grid mini"><div><span class="label">Initial loss</span><b id="m-init"></b></div><div><span class="label">Final loss</span><b id="m-final"></b></div>
+          <div><span class="label">Accuracy</span><b id="m-acc"></b></div><div><span class="label">Precision</span><b id="m-prec"></b></div>
+          <div><span class="label">Recall</span><b id="m-rec"></b></div><div><span class="label">F1</span><b id="m-f1"></b></div></div>
+        <p class="muted" id="m-note"></p></div>
+      <p class="muted" id="m-none">Metrics appear after a model is trained or loaded.</p></div>
+  </div>
+  <div class="card learn"><h3>Learn the concepts</h3>
+    <details open><summary>Perceptron</summary><p>One artificial neuron: multiply each input by a weight, add them up, add a bias, then decide. Example: inputs 0.8 and 0.3, weights 0.9 and −0.5, bias −0.2 give 0.72 − 0.15 − 0.2 = 0.37, which is above 0, so it outputs 1.</p></details>
+    <details><summary>Forward propagation</summary><p>Data flows left to right: 5 inputs → 8 hidden neurons → 1 output. Each layer does weighted sums plus bias, then an activation. The final sigmoid gives a probability between 0 and 1.</p></details>
+    <details><summary>Activation functions</summary><p>Without them the network could only draw straight lines. ReLU keeps positives and zeroes negatives. Tanh squashes values between −1 and 1. Sigmoid squashes into 0–1, perfect for probabilities.</p></details>
+    <details><summary>Loss calculation</summary><p>Loss is a score for how wrong the guesses are. We use binary cross-entropy: it punishes confident wrong answers heavily. Lower is better.</p></details>
+    <details><summary>Backpropagation</summary><p>After a wrong guess, the error is sent backwards through the layers using the chain rule, giving each weight a gradient: “which direction, and how much, should I change to reduce the loss?”</p></details>
+    <details><summary>SGD</summary><p>Stochastic gradient descent nudges every weight a small step (the learning rate) opposite its gradient, using small random batches of examples.</p></details>
+    <details><summary>Adam</summary><p>Adam also remembers a running average of past gradients (momentum) and of their squares, so each weight gets its own adaptive step size. It often trains faster with less tuning.</p></details>
+    <details><summary>Serialization &amp; inference</summary><p>After training, the weights, biases, settings and scaling numbers are saved to a file with Joblib. Loading restores them so predictions work instantly without retraining. Only load model files you created yourself.</p></details>
+  </div>
+</section>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

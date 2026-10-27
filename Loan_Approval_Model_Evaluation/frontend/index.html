@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Approval Model Evaluation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <p class="eyebrow">HACK-O-WEEK • WEEK 9–10</p>
+            <h1>Loan Approval <span>Model Evaluation</span></h1>
+            <p>Evaluate classification models using train/test split, cross-validation,
+               confusion matrix, Precision, Recall, F1 and ROC-AUC.</p>
+        </header>
+
+        <section class="card">
+            <div class="section-title">
+                <div>
+                    <h2>Model Performance</h2>
+                    <p>Metrics calculated on the held-out test dataset.</p>
+                </div>
+                <button id="refreshBtn">Refresh Evaluation</button>
+            </div>
+            <div id="models" class="model-grid">
+                <p>Loading evaluation...</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="section-title">
+                <div>
+                    <h2>Loan Approval Prediction</h2>
+                    <p>Feature engineering includes missing-value handling and scaling.</p>
+                </div>
+            </div>
+
+            <form id="loanForm" class="form-grid">
+                <label>Gender
+                    <select name="Gender"><option>Male</option><option>Female</option></select>
+                </label>
+                <label>Married
+                    <select name="Married"><option>Yes</option><option>No</option></select>
+                </label>
+                <label>Dependents
+                    <select name="Dependents"><option>0</option><option>1</option><option>2</option><option>3+</option></select>
+                </label>
+                <label>Education
+                    <select name="Education"><option>Graduate</option><option>Not Graduate</option></select>
+                </label>
+                <label>Self Employed
+                    <select name="Self_Employed"><option>No</option><option>Yes</option></select>
+                </label>
+                <label>Applicant Income
+                    <input name="ApplicantIncome" type="number" value="5000" required>
+                </label>
+                <label>Coapplicant Income
+                    <input name="CoapplicantIncome" type="number" value="1500" required>
+                </label>
+                <label>Loan Amount
+                    <input name="LoanAmount" type="number" value="130" required>
+                </label>
+                <label>Loan Term
+                    <input name="Loan_Amount_Term" type="number" value="360" required>
+                </label>
+                <label>Credit History
+                    <select name="Credit_History"><option value="1">Good (1)</option><option value="0">Poor (0)</option></select>
+                </label>
+                <label>Property Area
+                    <select name="Property_Area"><option>Urban</option><option>Semiurban</option><option>Rural</option></select>
+                </label>
+                <button class="predict" type="submit">Predict Loan Approval</button>
+            </form>
+            <div id="prediction" class="prediction"></div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

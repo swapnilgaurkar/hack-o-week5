@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Math Playground</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <div class="container">
+        <p class="eyebrow">AI • MATHEMATICS • VISUALIZATION</p>
+        <h1>Neural Network Math Playground</h1>
+        <p class="subtitle">Explore the mathematics behind neural networks through interactive examples.</p>
+        <nav>
+            <a href="#linear">Linear Algebra</a>
+            <a href="#calculus">Calculus</a>
+            <a href="#backprop">Backpropagation</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <section class="hero">
+        <div>
+            <h2>From numbers to neural networks</h2>
+            <p>Vectors and matrices represent data. Derivatives and gradients tell a model how to learn. The chain rule connects them during backpropagation.</p>
+        </div>
+        <div class="flow">VECTOR → MATRIX → DOT PRODUCT → DERIVATIVE → GRADIENT → CHAIN RULE → BACKPROP</div>
+    </section>
+
+    <section id="linear">
+        <div class="section-title">
+            <span>01</span><h2>Linear Algebra</h2>
+        </div>
+
+        <div class="grid">
+            <article class="card">
+                <h3>Vectors & Dot Product</h3>
+                <p class="hint">Try two 3-dimensional vectors.</p>
+                <div class="inputs">
+                    <label>Vector A <input id="va" value="2, 3, 1"></label>
+                    <label>Vector B <input id="vb" value="4, 1, 2"></label>
+                </div>
+                <button onclick="calculateVectors()">Calculate</button>
+                <pre id="vectorResult">Result will appear here...</pre>
+            </article>
+
+            <article class="card">
+                <h3>Matrices</h3>
+                <p class="hint">A simple 2×2 matrix transformation.</p>
+                <div class="matrix-inputs">
+                    <label>A <input id="mA" value="1, 2; 3, 4"></label>
+                    <label>B <input id="mB" value="2, 0; 1, 2"></label>
+                    <label>Vector <input id="mv" value="2, 1"></label>
+                </div>
+                <button onclick="calculateMatrices()">Calculate</button>
+                <pre id="matrixResult">Result will appear here...</pre>
+            </article>
+
+            <article class="card wide">
+                <h3>Eigenvalues — Intuition</h3>
+                <p>
+                    A matrix can transform a vector by rotating, stretching or shrinking it.
+                    An <strong>eigenvector</strong> is a special direction that stays on the same line
+                    after the transformation. Its scaling factor is the <strong>eigenvalue</strong>.
+                </p>
+                <div class="eigen-demo">
+                    <div class="matrix-box">A = [ 2  0 ]<br>&nbsp;&nbsp;&nbsp;&nbsp;[ 0  3 ]</div>
+                    <div class="arrow">→</div>
+                    <div class="matrix-box">[1, 0] → [2, 0]<br>[0, 1] → [0, 3]</div>
+                </div>
+                <p class="concept">For this matrix, the eigenvalues are <strong>2</strong> and <strong>3</strong>.
+                The directions along the x-axis and y-axis remain unchanged; only their lengths change.</p>
+            </article>
+        </div>
+    </section>
+
+    <section id="calculus">
+        <div class="section-title">
+            <span>02</span><h2>Calculus</h2>
+        </div>
+
+        <div class="grid">
+            <article class="card">
+                <h3>Derivatives</h3>
+                <p>For <strong>f(x) = x³ + 2x² + x</strong>, the derivative gives the slope at any point.</p>
+                <label>Choose x <input type="number" id="dx" value="2" step="0.1"></label>
+                <button onclick="calculateDerivative()">Find Slope</button>
+                <pre id="derivativeResult">Result will appear here...</pre>
+            </article>
+
+            <article class="card">
+                <h3>Gradients</h3>
+                <p>For <strong>f(x,y) = x² + 2y²</strong>, the gradient contains the partial derivatives in each direction.</p>
+                <div class="inputs">
+                    <label>x <input type="number" id="gx" value="2" step="0.1"></label>
+                    <label>y <input type="number" id="gy" value="1" step="0.1"></label>
+                </div>
+                <button onclick="calculateGradient()">Find Gradient</button>
+                <pre id="gradientResult">Result will appear here...</pre>
+            </article>
+
+            <article class="card wide">
+                <h3>Chain Rule</h3>
+                <div class="chain">
+                    <div>x</div><span>→</span><div>z = 2x</div><span>→</span><div>y = z²</div>
+                </div>
+                <p class="formula">dy/dx = (dy/dz) × (dz/dx)</p>
+                <p>Here, <strong>dy/dz = 2z</strong> and <strong>dz/dx = 2</strong>, so
+                    <strong>dy/dx = 4z = 8x</strong>.</p>
+                <p class="concept">This is the key idea behind backpropagation: break a complicated calculation into smaller derivatives and multiply them together.</p>
+            </article>
+        </div>
+    </section>
+
+    <section id="backprop">
+        <div class="section-title">
+            <span>03</span><h2>Backpropagation Demo</h2>
+        </div>
+
+        <article class="card backprop-card">
+            <div class="network">
+                <div class="node-group">
+                    <div class="node">x<br><small>input</small></div>
+                </div>
+                <div class="connection">× w₁</div>
+                <div class="node-group">
+                    <div class="node">σ<br><small>hidden</small></div>
+                </div>
+                <div class="connection">× w₂</div>
+                <div class="node-group">
+                    <div class="node">σ<br><small>output</small></div>
+                </div>
+                <div class="connection">→ error</div>
+            </div>
+
+            <div class="bp-controls">
+                <label>Input x <input type="number" id="bx" value="1" step="0.1"></label>
+                <label>Weight w₁ <input type="number" id="bw1" value="0.5" step="0.1"></label>
+                <label>Weight w₂ <input type="number" id="bw2" value="0.8" step="0.1"></label>
+                <label>Target <input type="number" id="bt" value="1" step="0.1" min="0" max="1"></label>
+                <label>Learning rate <input type="number" id="blr" value="0.1" step="0.01"></label>
+            </div>
+            <button onclick="runBackprop()">Run Forward + Backward Pass</button>
+            <pre id="backpropResult">Result will appear here...</pre>
+        </article>
+    </section>
+
+    <section class="summary">
+        <h2>Why these topics matter in AI</h2>
+        <div class="summary-grid">
+            <div><b>Linear Algebra</b><br>Stores and transforms data.</div>
+            <div><b>Dot Product</b><br>Combines inputs with weights.</div>
+            <div><b>Derivatives</b><br>Measure how output changes.</div>
+            <div><b>Gradients</b><br>Show how to change multiple parameters.</div>
+            <div><b>Chain Rule</b><br>Connects derivatives through layers.</div>
+            <div><b>Backpropagation</b><br>Uses all of these ideas to update weights.</div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>Neural Network Math Playground • Educational Mini Project</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
